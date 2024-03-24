@@ -1,9 +1,19 @@
 SQLite schema visualizer
 ========================
 
-Usage:
+## Usage
 
-  $ sqlite-schema-viz /path/to/sqlite.db
+    $ sqlite-schema-viz /path/to/sqlite.db
+
+## Example
+
+```sql
+CREATE TABLE users ( id integer, name text );
+CREATE TABLE posts ( id integer, user_id integer, title text, body text, foreign key (user_id) references users(id) );
+CREATE TABLE comments ( id integer, post_id integer, body text, foreign key (post_id) references posts(id) );
+```
+
+![example render](example.png)
 
 ## Credits
 
