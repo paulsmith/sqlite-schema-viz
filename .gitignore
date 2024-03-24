@@ -21,3 +21,5 @@
 go.work
 *.db
 *.png
+.direnv/
+.envrc

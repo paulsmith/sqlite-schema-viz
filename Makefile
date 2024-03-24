@@ -1,5 +1,5 @@
 sqlite-schema-viz:
-	go build .
+	CGO_FLAGS='-O2 -g -w' go build .
 
 .PHONY: sqlite-schema-viz
 

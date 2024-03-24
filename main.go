@@ -46,7 +46,7 @@ func main() {
 	}
 	defer db.Close()
 
-	img, err := render(db)
+	img, err := render(db, PNG)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -57,8 +57,26 @@ func main() {
 	}
 }
 
+type format int
+
+const (
+	PNG format = iota
+	SVG
+)
+
+func (f format) GV() graphviz.Format {
+	switch f {
+	case PNG:
+		return graphviz.PNG
+	case SVG:
+		return graphviz.SVG
+	default:
+		panic(fmt.Sprintf("unknown format: %v", f))
+	}
+}
+
 // render produces an in-memory image of the SQLite database schema graph
-func render(db *sql.DB) ([]byte, error) {
+func render(db *sql.DB, format format) ([]byte, error) {
 	// Execute the SQL query to get the schema diagram as a Graphviz DOT string
 	rows, err := db.Query(schemaDiagramSQL)
 	if err != nil {
@@ -84,7 +102,7 @@ func render(db *sql.DB) ([]byte, error) {
 
 	g := graphviz.New()
 	var img bytes.Buffer
-	if err := g.Render(graph, graphviz.PNG, &img); err != nil {
+	if err := g.Render(graph, format.GV(), &img); err != nil {
 		return nil, fmt.Errorf("rendering graph: %w", err)
 	}
 

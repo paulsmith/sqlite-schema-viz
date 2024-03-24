@@ -27,12 +27,12 @@ CREATE TABLE comments ( id integer, post_id integer, body text, foreign key (pos
 		t.Fatal(err)
 	}
 
-	actual, err := render(db)
+	actual, err := render(db, SVG)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	goldenPath := path.Join("testdata", t.Name()+".golden.png")
+	goldenPath := path.Join("testdata", t.Name()+".golden.svg")
 
 	if *update {
 		if err := os.WriteFile(goldenPath, actual, 0644); err != nil {
