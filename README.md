@@ -1,6 +1,8 @@
 SQLite schema visualizer
 ========================
 
+[![Go](https://github.com/paulsmith/sqlite-schema-viz/actions/workflows/go.yml/badge.svg)](https://github.com/paulsmith/sqlite-schema-viz/actions/workflows/go.yml)
+
 ## Usage
 
     $ sqlite-schema-viz /path/to/sqlite.db
