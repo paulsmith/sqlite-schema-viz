@@ -46,7 +46,7 @@ func main() {
 	}
 	defer db.Close()
 
-	img, err := renderDbSchemaDiagram(db)
+	img, err := render(db)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -57,8 +57,8 @@ func main() {
 	}
 }
 
-// renderDbSchemaDiagram produces an in-memory image of the SQLite database schema graph
-func renderDbSchemaDiagram(db *sql.DB) ([]byte, error) {
+// render produces an in-memory image of the SQLite database schema graph
+func render(db *sql.DB) ([]byte, error) {
 	// Execute the SQL query to get the schema diagram as a Graphviz DOT string
 	rows, err := db.Query(schemaDiagramSQL)
 	if err != nil {

@@ -11,7 +11,7 @@ import (
 
 var update = flag.Bool("update", false, "update golden files")
 
-func TestRenderDbSchemaDiagram(t *testing.T) {
+func TestRender(t *testing.T) {
 	db, err := sql.Open("sqlite3", ":memory:")
 	if err != nil {
 		t.Fatal(err)
@@ -23,12 +23,11 @@ CREATE TABLE posts ( id integer, user_id integer, title text, body text, foreign
 CREATE TABLE comments ( id integer, post_id integer, body text, foreign key (post_id) references posts(id) );
 `
 
-	_, err = db.Exec(schema)
-	if err != nil {
+	if _, err := db.Exec(schema); err != nil {
 		t.Fatal(err)
 	}
 
-	actual, err := renderDbSchemaDiagram(db)
+	actual, err := render(db)
 	if err != nil {
 		t.Fatal(err)
 	}
