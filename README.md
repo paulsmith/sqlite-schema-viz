@@ -17,7 +17,7 @@ CREATE TABLE comments ( id integer, post_id integer, body text, foreign key (pos
 
 ## Credits
 
-Credit to [Screwtapello](https://gitlab.com/Screwtapello) on Gitlab for
+Credit to [@Screwtapello](https://gitlab.com/Screwtapello) on Gitlab for
 [sqlite-schema-diagram](https://gitlab.com/Screwtapello/sqlite-schema-diagram/)
 which provides the SQL query that generates the Graphviz DOT output this tool
 is based on.

@@ -8,9 +8,11 @@
 package main
 
 import (
+	"bytes"
 	"database/sql"
 	_ "embed"
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -44,10 +46,23 @@ func main() {
 	}
 	defer db.Close()
 
+	img, err := renderDbSchemaDiagram(db)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Write the image to the output file.
+	if err := os.WriteFile(outputImgPath, img, 0644); err != nil {
+		log.Fatal(err)
+	}
+}
+
+// renderDbSchemaDiagram produces an in-memory image of the SQLite database schema graph
+func renderDbSchemaDiagram(db *sql.DB) ([]byte, error) {
 	// Execute the SQL query to get the schema diagram as a Graphviz DOT string
 	rows, err := db.Query(schemaDiagramSQL)
 	if err != nil {
-		log.Fatal(err)
+		return nil, fmt.Errorf("querying schema diagram: %w", err)
 	}
 	defer rows.Close()
 
@@ -64,11 +79,14 @@ func main() {
 	// Using the go-graphviz library, parse the DOT string into a graph and render it to a PNG file.
 	graph, err := graphviz.ParseBytes([]byte(source.String()))
 	if err != nil {
-		log.Fatalf("parsing DOT: %v", err)
+		return nil, fmt.Errorf("parsing DOT: %w", err)
 	}
 
 	g := graphviz.New()
-	if err := g.RenderFilename(graph, graphviz.PNG, outputImgPath); err != nil {
-		log.Fatal(err)
+	var img bytes.Buffer
+	if err := g.Render(graph, graphviz.PNG, &img); err != nil {
+		return nil, fmt.Errorf("rendering graph: %w", err)
 	}
+
+	return img.Bytes(), nil
 }
